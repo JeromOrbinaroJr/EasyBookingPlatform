@@ -1,0 +1,22 @@
+<%- include('../layout') %>
+<h1>Управление расписанием</h1>
+<p>Добавьте доступные слоты для бронирования.</p>
+
+<!-- Пример добавления слота -->
+<form action="/business/schedule" method="POST">
+    <label for="time">Время:</label>
+    <input type="text" id="time" name="time" required>
+    <button type="submit">Добавить слот</button>
+</form>
+
+<h2>Доступные слоты</h2>
+<div class="schedule">
+    <div class="slot">
+        <p>10:00 - 11:00</p>
+        <button>Удалить</button>
+    </div>
+    <div class="slot">
+        <p>11:00 - 12:00</p>
+        <button>Удалить</button>
+    </div>
+</div>
