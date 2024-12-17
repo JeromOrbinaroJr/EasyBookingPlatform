@@ -1,14 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-// Моделируем данные о столиках
-let tables = [
-    { id: 0, booked: false, bookedByClient: false },
-    { id: 1, booked: false, bookedByClient: false },
-    { id: 2, booked: false, bookedByClient: false },
-    { id: 3, booked: false, bookedByClient: false },
-    { id: 4, booked: false, bookedByClient: false },
-];
+const tables = require('./tablesData');
 
 // Бронирование столика
 router.post('/book-table/:id', (req, res) => {

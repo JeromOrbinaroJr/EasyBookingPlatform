@@ -20,14 +20,16 @@
         
         <div class="table-field">
             <% tables.forEach((table, index) => { %>
-                <div 
-                    class="table-point <%= table.booked ? 'booked' : 'free' %}" 
-                    data-id="<%= index %>" 
-                    onclick="<%= table.booked ? `cancelBooking(${index})` : `bookTable(${index})` %>"
-                >
-                    <%= table.booked ? 'Занято' : index + 1 %>
-                </div>
-            <% }) %>
+                <% if (table.booked) { %>
+                    <div class="table-point booked" data-id="<%= index %>" onclick="cancelBooking(<%= index %>)">
+                        Занято
+                    </div>
+                <% } else { %>
+                    <div class="table-point free" data-id="<%= index %>" onclick="bookTable(<%= index %>)">
+                        <%= index + 1 %>
+                    </div>
+                <% } %>
+            <% }) %>                        
         </div>
         
         <script>

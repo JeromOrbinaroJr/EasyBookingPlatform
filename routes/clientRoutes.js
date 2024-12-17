@@ -1,4 +1,5 @@
 const express = require('express');
+const tables = require('./tablesData');
 const router = express.Router();
 
 // Бронирование столика предприятием
@@ -10,7 +11,7 @@ router.post('/book-table/:id', (req, res) => {
         tables[tableId].bookedByClient = false;  // Отметим, что столик забронирован предприятием
         res.json({ success: true });
     } else {
-        res.json({ success: false, error: 'Столик уже забронирован или не существует' });
+        res.status(400).json({ success: false, error: 'Столик уже забронирован или не существует' });
     }
 });
 
@@ -23,10 +24,9 @@ router.post('/cancel-booking/:id', (req, res) => {
         tables[tableId].bookedByClient = false; // Отменяем бронь для клиента и предприятия
         res.json({ success: true });
     } else {
-        res.json({ success: false, error: 'Столик не забронирован или не существует' });
+        res.status(400).json({ success: false, error: 'Столик не забронирован или не существует' });
     }
 });
-
 
 // Страница бронирования
 router.get('/authorized-bookings', (req, res) => {
