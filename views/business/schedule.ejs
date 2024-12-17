@@ -1,22 +1,50 @@
-<%- include('../layout') %>
-<h1>Управление расписанием</h1>
-<p>Добавьте доступные слоты для бронирования.</p>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="/" class="nav-link">Главная</a>
+        </nav>
+    </header>
 
-<!-- Пример добавления слота -->
-<form action="/business/schedule" method="POST">
-    <label for="time">Время:</label>
-    <input type="text" id="time" name="time" required>
-    <button type="submit">Добавить слот</button>
-</form>
+    <main class="main-content">
+        <h1>Расписание и Столики</h1>
+        <p>Выберите столик для бронирования:</p>
+        
+        <div class="table-field">
+            <% tables.forEach((table, index) => { %>
+                <div class="table-point <%= table.booked ? 'booked' : 'free' %>"
+                    data-id="<%= index %>" onclick="bookTable(<%= index %>)">
+                    <%= index + 1 %>
+                </div>
+            <% }) %>
+        </div>
+        
+        <script>
+            function bookTable(index) {
+                // Пример отправки данных на сервер для бронирования
+                fetch(`/business/book-table/${index}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Столик забронирован!');
+                            window.location.reload(); // Перезагружаем страницу для обновления состояния
+                        } else {
+                            alert('Ошибка бронирования.');
+                        }
+                    });
+            }
+        </script>
+    </main>
 
-<h2>Доступные слоты</h2>
-<div class="schedule">
-    <div class="slot">
-        <p>10:00 - 11:00</p>
-        <button>Удалить</button>
-    </div>
-    <div class="slot">
-        <p>11:00 - 12:00</p>
-        <button>Удалить</button>
-    </div>
-</div>
+    <footer>
+        <p>&copy; 2024 EasyBookingPlatform.</p>
+    </footer>
+</body>
+</html>

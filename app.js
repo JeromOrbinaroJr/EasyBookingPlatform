@@ -1,48 +1,27 @@
 const express = require('express');
-const path = require('path');
-
 const app = express();
-
-// Настройка движка представлений
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// Статические файлы (CSS, JS)
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.urlencoded({ extended: true }));
-
-// Роуты для клиента и бизнеса
+const path = require('path');
 const clientRoutes = require('./routes/clientRoutes');
 const businessRoutes = require('./routes/businessRoutes');
+const authRoutes = require('./routes/authRoutes');
+
+// Устанавливаем папку для статичных файлов
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Устанавливаем ejs как шаблонизатор
+app.set('view engine', 'ejs');
+
+// Подключаем маршруты
 app.use('/client', clientRoutes);
 app.use('/business', businessRoutes);
+app.use('/auth', authRoutes);
 
-// Главная страница
+// Главная страница с выбором интерфейса
 app.get('/', (req, res) => {
-    res.render('client/index', { 
-        title: 'Главная страница клиента', 
-        body: '<h1>Добро пожаловать на платформу для бронирования!</h1><p>На этом сайте вы можете легко найти и забронировать доступные слоты для различных услуг.</p>'
-    });
+    res.render('main');  // Отображаем главную страницу с выбором
 });
 
-app.get('/client/bookings', (req, res) => {
-    res.render('client/bookings', { 
-        title: 'Бронирования клиента', 
-        body: '<h1>Ваши бронирования</h1><p>Здесь будут отображаться все ваши бронирования.</p>'
-    });
-});
-
-
-app.get('/business/schedule', (req, res) => {
-    res.render('business/schedule', { 
-        title: 'Управление расписанием', 
-        body: '<h1>Управление расписанием</h1><p>Добавьте доступные слоты для бронирования.</p>'
-    });
-});
-
-
-// Запуск сервера
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+// Запускаем сервер
+app.listen(3000, () => {
+    console.log('Server is running on port 3000.');
 });
