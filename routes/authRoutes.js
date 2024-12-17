@@ -31,12 +31,18 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).json({ success: false, error: 'Ошибка при выходе.' });
-        }
-        res.redirect('/');
-    });
+    if (req.session && req.session.user) {
+        req.session.destroy((err) => {
+            if (err) {
+                console.log('Ошибка при уничтожении сессии:', err);
+            } else {
+                // Логика после успешного уничтожения сессии
+            }
+        });
+    } else {
+        console.log('Сессия или пользователь не найдены');
+    }
+    
 });
 
 module.exports = router;
