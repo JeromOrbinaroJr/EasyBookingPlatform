@@ -214,3 +214,11 @@ footer {
     background-color: #45a049;
 }
 
+.table-point.booked {
+    background-color: #FF6347; /* Забронированный столик */
+    cursor: not-allowed;
+}
+
+.table-point.free:hover {
+    background-color: #98FB98;
+}

@@ -1,31 +1,37 @@
 const express = require('express');
 const router = express.Router();
 
-// Моделируем данные о столиках
-let tables = [
-    { booked: false },
-    { booked: false },
-    { booked: false },
-    { booked: false },
-    { booked: false },
-];
-
-// Страница с бронированиями
-router.get('/bookings', (req, res) => {
-    res.render('client/bookings', { title: 'Бронирования', tables: tables });
-});
-
-// Бронирование столика
+// Бронирование столика предприятием
 router.post('/book-table/:id', (req, res) => {
     const tableId = req.params.id;
-    
-    // Проверка, что столик существует и не забронирован
+
     if (tables[tableId] && !tables[tableId].booked) {
         tables[tableId].booked = true;
+        tables[tableId].bookedByClient = false;  // Отметим, что столик забронирован предприятием
         res.json({ success: true });
     } else {
-        res.json({ success: false });
+        res.json({ success: false, error: 'Столик уже забронирован или не существует' });
     }
 });
+
+// Отмена бронирования столика
+router.post('/cancel-booking/:id', (req, res) => {
+    const tableId = req.params.id;
+
+    if (tables[tableId] && tables[tableId].booked) {
+        tables[tableId].booked = false;
+        tables[tableId].bookedByClient = false; // Отменяем бронь для клиента и предприятия
+        res.json({ success: true });
+    } else {
+        res.json({ success: false, error: 'Столик не забронирован или не существует' });
+    }
+});
+
+
+// Страница бронирования
+router.get('/authorized-bookings', (req, res) => {
+    res.render('client/authorizedBookings', { title: 'Бронирование столиков', tables });
+});
+
 
 module.exports = router;

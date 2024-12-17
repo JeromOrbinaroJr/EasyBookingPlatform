@@ -6,10 +6,13 @@ const businessRoutes = require('./routes/businessRoutes');
 const authRoutes = require('./routes/authRoutes');
 
 // Устанавливаем папку для статичных файлов
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Устанавливаем ejs как шаблонизатор
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Подключаем маршруты
 app.use('/client', clientRoutes);

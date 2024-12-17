@@ -4,39 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/public/css/styles.css">
 </head>
 <body>
     <header class="header">
         <nav class="navbar">
             <a href="/" class="nav-link">Главная</a>
+            <a href="/auth/logout" class="nav-link">Выйти</a>
         </nav>
     </header>
 
     <main class="main-content">
-        <h1>Расписание и Столики</h1>
-        <p>Выберите столик для бронирования:</p>
+        <h1>Бронирование столиков</h1>
+        <p>Выберите доступное место для бронирования:</p>
         
         <div class="table-field">
             <% tables.forEach((table, index) => { %>
-                <div class="table-point <%= table.booked ? 'booked' : 'free' %>"
-                    data-id="<%= index %>" onclick="bookTable(<%= index %>)">
-                    <%= index + 1 %>
+                <div 
+                    class="table-point <%= table.booked ? 'booked' : 'free' %}" 
+                    data-id="<%= index %>" 
+                    onclick="<%= table.booked ? '' : `bookTable(${index})` %>"
+                >
+                    <%= table.booked ? 'Занято' : index + 1 %>
                 </div>
             <% }) %>
         </div>
         
         <script>
             function bookTable(index) {
-                // Пример отправки данных на сервер для бронирования
-                fetch(`/business/book-table/${index}`, { method: 'POST' })
+                fetch(`/client/book-table/${index}`, { method: 'POST' })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
                             alert('Столик забронирован!');
-                            window.location.reload(); // Перезагружаем страницу для обновления состояния
+                            window.location.reload();
                         } else {
-                            alert('Ошибка бронирования.');
+                            alert('Не удалось забронировать столик.');
                         }
                     });
             }

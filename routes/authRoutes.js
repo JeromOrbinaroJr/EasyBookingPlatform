@@ -14,16 +14,30 @@ router.get('/login/business', (req, res) => {
 // Обработка входа
 router.post('/login', (req, res) => {
     const { username, password, role } = req.body;
-    
-    if (role === 'client') {
-        // Логика для входа клиента
-        res.redirect('/client/bookings');  // Перенаправление на страницу пользователя
-    } else if (role === 'business') {
-        // Логика для входа бизнеса
-        res.redirect('/business/schedule');  // Перенаправление на страницу бизнеса
-    } else {
-        res.status(401).send('Неверная роль.');
+
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Введите имя пользователя и пароль' });
     }
+
+    if (role === 'client') {
+        // Перенаправление на интерфейс клиента
+        return res.redirect('/client/authorized-bookings');
+    } else if (role === 'business') {
+        // Перенаправление на интерфейс предприятия
+        return res.redirect('/business/manage-bookings');
+    }
+
+    res.status(400).json({ error: 'Неверная роль пользователя' });
+});
+
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ success: false, error: 'Ошибка при выходе.' });
+        }
+        res.redirect('/');
+    });
 });
 
 module.exports = router;
+

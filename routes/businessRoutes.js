@@ -3,28 +3,40 @@ const router = express.Router();
 
 // Моделируем данные о столиках
 let tables = [
-    { booked: false },
-    { booked: false },
-    { booked: false },
-    { booked: false },
-    { booked: false },
+    { id: 0, booked: false, bookedByClient: false },
+    { id: 1, booked: false, bookedByClient: false },
+    { id: 2, booked: false, bookedByClient: false },
+    { id: 3, booked: false, bookedByClient: false },
+    { id: 4, booked: false, bookedByClient: false },
 ];
-
-// Страница с расписанием
-router.get('/schedule', (req, res) => {
-    res.render('business/schedule', { title: 'Расписание', tables: tables });
-});
 
 // Бронирование столика
 router.post('/book-table/:id', (req, res) => {
     const tableId = req.params.id;
-    
-    // Проверка, что столик существует и не забронирован
+
     if (tables[tableId] && !tables[tableId].booked) {
         tables[tableId].booked = true;
+        tables[tableId].bookedByClient = true;  // Отметим, что столик забронирован клиентом
         res.json({ success: true });
     } else {
-        res.json({ success: false });
+        res.json({ success: false, error: 'Столик уже забронирован или не существует' });
+    }
+});
+
+// Страница управления бронированиями
+router.get('/manage-bookings', (req, res) => {
+    res.render('business/manageBookings', { title: 'Управление бронированиями', tables });
+});
+
+// Отмена брони
+router.post('/cancel-booking/:id', (req, res) => {
+    const tableId = req.params.id;
+
+    if (tables[tableId] && tables[tableId].booked) {
+        tables[tableId].booked = false;
+        res.json({ success: true });
+    } else {
+        res.json({ success: false, error: 'Столик не забронирован или не существует' });
     }
 });
 

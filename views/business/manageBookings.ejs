@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="/" class="nav-link">Главная</a>
+            <a href="/auth/logout" class="nav-link">Выйти</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h1>Управление бронированиями</h1>
+        <p>Здесь вы можете отменить бронь:</p>
+        
+        <div class="table-field">
+            <% tables.forEach((table, index) => { %>
+                <div 
+                    class="table-point <%= table.booked ? 'booked' : 'free' %}" 
+                    data-id="<%= index %>" 
+                    onclick="<%= table.booked ? `cancelBooking(${index})` : `bookTable(${index})` %>"
+                >
+                    <%= table.booked ? 'Занято' : index + 1 %>
+                </div>
+            <% }) %>
+        </div>
+        
+        <script>
+            function bookTable(index) {
+                fetch(`/business/book-table/${index}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Столик забронирован!');
+                            window.location.reload();
+                        } else {
+                            alert('Не удалось забронировать столик.');
+                        }
+                    });
+            }
+        
+            function cancelBooking(index) {
+                fetch(`/business/cancel-booking/${index}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Бронь отменена!');
+                            window.location.reload();
+                        } else {
+                            alert('Не удалось отменить бронь.');
+                        }
+                    });
+            }
+        </script>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 EasyBookingPlatform.</p>
+    </footer>
+</body>
+</html>
